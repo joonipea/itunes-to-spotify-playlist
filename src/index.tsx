@@ -156,7 +156,18 @@ export default function App() {
 
     return token === null ? (
         <div>
+            <h1>Itunes/Apple Music Playlist to Spotify Playlist</h1>
+            <h3>Steps:</h3>
+            <ol>
+                <li>Save a copy of a single playlist or use it in Music on another computer: Select a playlist in the sidebar, choose File / Library / Export Playlist, then click the Format pop-up menu and choose XML.</li>
+                <li>Login to your spotify with the link below</li>
+                <li>Upload the .xml file</li>
+                <li>Name your playlist</li>
+                <li>Double check your playlist (please note some songs may be missing this isn't perfect)</li>
+                <li>Click the button to create a playlist on Spotify</li>
+            </ol>
             <a href={authorizeURL}>Login with Spotify</a>
+            <p>If you'd like to contribute to this project reachout to june@joonipea.com or check https://github.com/joonipea</p>
         </div>
     ) : (
         <div>
@@ -172,6 +183,7 @@ export default function App() {
                     <div>{decodeURIComponent(track)}</div>
                 ))}
             </div>
+            <p>If you'd like to contribute to this project reachout to june@joonipea.com or check https://github.com/joonipea</p>
         </div>
     );
 }
