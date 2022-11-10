@@ -1,0 +1,25 @@
+GET http://localhost:8081/
+
+###
+
+POST http://localhost:8081/searchTrack 
+Content-Type: application/json
+
+{
+
+    "name": "Alright",
+    "artist": "Kendrick Lamar"
+
+}
+
+###
+
+POST http://localhost:8081/test
+Content-Type: application/json
+
+{
+
+    "name": "Alright",
+    "artist": "Kendrick Lamar"
+
+}
