@@ -97,7 +97,7 @@ export default function App() {
     const submitPlaylist = async () => {
         if (playlist.length > 0) {
             await getSpotifyURI();
-            spotifyApi.createPlaylist(playlistName, { 'public': true })
+            spotifyApi.createPlaylist(playlistName, { 'public': true, 'description': 'playlist made with: https://itunes-spotify.herokuapp.com/' })
             .then( async (data) => {
                 console.log(data.body);
                 let playlistId = data.body.id;
@@ -120,11 +120,16 @@ export default function App() {
                         console.log(err);
                     });
                 };
+                if(successDialog.current !== null){
+                    successDialog.current.innerHTML += `Your playlist, ${playlistName} was created <a href=${data.body.href}>here!</a>`;
+                    successDialog.current.showModal();
+                    successDialog.current.querySelector('button')?.addEventListener('click', () => {
+                        successDialog.current?.close();
+                    });
+
+                }
                 setPlaylistName('');
                 setPlaylist([]);
-                if(successDialog.current !== null){
-                    successDialog.current.showModal();
-                }
             });
         }
         else {
@@ -239,7 +244,7 @@ export default function App() {
                     <div>{decodeURIComponent(track)}</div>
                 ))}
             </div>
-            <dialog ref={successDialog}>{playlistName} was created 😊</dialog>
+            <dialog ref={successDialog}><button>Close</button></dialog>
             <p>If you'd like to contribute to this project check <a href='https://github.com/joonipea/itunes-to-spotify-playlist'>https://github.com/joonipea/itunes-to-spotify-playlist</a></p>
         </div>
     );
