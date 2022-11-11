@@ -199,7 +199,34 @@ export default function App() {
             <p>If you'd like to contribute to this project reachout to june@joonipea.com or check https://github.com/joonipea</p>
         </div>
     ) : (
-        <div>
+        <div style={{margin:'auto',width:'fit-content'}}>
+            <style>
+                {`
+                .login-btn {
+                    background-color: #1DB954;
+                    padding: 10px;
+                    border-radius: 5px;
+                    color: white;
+                    text-decoration: none;
+                }
+                .login-btn:hover {
+                    background-color: #1ED760;
+                }
+                p, a, li {
+                    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                    font-size: 16px;
+                    color: #222;
+                }
+                li {
+                    margin-bottom: 10px;
+                }
+                h1, h2, h3, h4, h5, h6 {
+                    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                    font-weight: 400;
+                    color: #222;
+                }
+                `}
+            </style>
             <h1>Logged in</h1>
             <img src={user?.images[0].url} alt="user image" />
             <h2>{user?.display_name}</h2>
