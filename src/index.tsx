@@ -155,18 +155,47 @@ export default function App() {
 
 
     return token === null ? (
-        <div>
-            <h1>Itunes/Apple Music Playlist to Spotify Playlist</h1>
+        <div style={{margin:'auto',width:'fit-content'}}>
+            <style>
+                {`
+                .login-btn {
+                    background-color: #1DB954;
+                    padding: 10px;
+                    border-radius: 5px;
+                    color: white;
+                    text-decoration: none;
+                }
+                .login-btn:hover {
+                    background-color: #1ED760;
+                }
+                p, a, li {
+                    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                    font-size: 16px;
+                    color: #222;
+                }
+                li {
+                    margin-bottom: 10px;
+                }
+                h1, h2, h3, h4, h5, h6 {
+                    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                    font-weight: 400;
+                    color: #222;
+                }
+                `}
+            </style>
+            <h1>iTunes/Apple Music Playlist to Spotify Playlist</h1>
             <h3>Steps:</h3>
             <ol>
-                <li>Save a copy of a single playlist or use it in Music on another computer: Select a playlist in the sidebar, choose File / Library / Export Playlist, then click the Format pop-up menu and choose XML.</li>
+                <li>Open iTunes</li>
+                <li>Select a playlist in the sidebar</li>
+                <li>Choose File / Library / Export Playlist, then click the Format pop-up menu and choose XML. <ul><li><a href="https://www.wikihow.com/Export-an-iTunes-Playlist">If you're running into problems check out this guide</a></li></ul></li>
                 <li>Login to your spotify with the link below</li>
                 <li>Upload the .xml file</li>
                 <li>Name your playlist</li>
                 <li>Double check your playlist (please note some songs may be missing this isn't perfect)</li>
                 <li>Click the button to create a playlist on Spotify</li>
             </ol>
-            <a href={authorizeURL}>Login with Spotify</a>
+            <a href={authorizeURL} className="login-btn">Login with Spotify</a>
             <p>If you'd like to contribute to this project reachout to june@joonipea.com or check https://github.com/joonipea</p>
         </div>
     ) : (
@@ -183,7 +212,7 @@ export default function App() {
                     <div>{decodeURIComponent(track)}</div>
                 ))}
             </div>
-            <p>If you'd like to contribute to this project reachout to june@joonipea.com or check https://github.com/joonipea</p>
+            <p>If you'd like to contribute to this project check <a href='https://github.com/joonipea/itunes-to-spotify-playlist'>https://github.com/joonipea/itunes-to-spotify-playlist</a></p>
         </div>
     );
 }
