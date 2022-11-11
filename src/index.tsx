@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import { createRoot } from 'react-dom/client';
 import SpotifyWebApi from 'spotify-web-api-node';
 import SpotifyWebApiServer from 'spotify-web-api-node/src/server-methods';
@@ -27,6 +27,7 @@ export default function App() {
     const [playlistName, setPlaylistName]: any = useState('');
     let tracklist: any = [];
     let spotifyTrackURIs: any = [];
+    const successDialog = useRef<HTMLDialogElement>(null);
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         const code = params.get('code');
@@ -119,14 +120,11 @@ export default function App() {
                         console.log(err);
                     });
                 };
-                for (const chunk of chunks) {
-                    await spotifyApi.addToMySavedTracks(chunk)
-                    .then( (data) => {
-                        console.log(data.body);
-                    }, (err) => {
-                        console.log(err);
-                    });
-                };
+                setPlaylistName('');
+                setPlaylist([]);
+                if(successDialog.current !== null){
+                    successDialog.current.showModal();
+                }
             });
         }
         else {
@@ -241,6 +239,7 @@ export default function App() {
                     <div>{decodeURIComponent(track)}</div>
                 ))}
             </div>
+            <dialog ref={successDialog}>{playlistName} was created 😊</dialog>
             <p>If you'd like to contribute to this project check <a href='https://github.com/joonipea/itunes-to-spotify-playlist'>https://github.com/joonipea/itunes-to-spotify-playlist</a></p>
         </div>
     );
