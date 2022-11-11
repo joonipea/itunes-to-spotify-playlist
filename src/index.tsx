@@ -231,8 +231,10 @@ export default function App() {
             <img src={user?.images[0].url} alt="user image" />
             <h2>{user?.display_name}</h2>
             <h3>{user?.email}</h3>
-            <input type="file" accept='.xml' onChange={handleFile}></input>
-            <input type="text" value={playlistName} onChange={e => setPlaylistName(e.target.value)}></input>
+            <label htmlFor='file'>XML Playlist File</label>
+            <input name='file' type="file" accept='.xml' onChange={handleFile}></input>
+            <label htmlFor='playlistName'>Playlist Name</label>
+            <input name='playlist' type="text" value={playlistName} onChange={e => setPlaylistName(e.target.value)}></input>
             <button onClick={submitPlaylist}>Submit</button>
             <div>
                 {playlist.map((track: any) => (
