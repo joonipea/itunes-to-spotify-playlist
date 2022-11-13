@@ -62,47 +62,65 @@ export default function App() {
         }
     }, [token]);
     
-
-    console.log(token);
     const handleFile = (e: any) => {
         const file = e.target.files[0];
         const reader = new FileReader();
         reader.onload = (e) => {
             const text = e.target?.result;
             if (text) {
-                console.log(text);
                 var parser = new XMLParser();
                 parser.parse(text, (err, result) => {
                     if(err){
                         console.log(err);
                     }
                     else{
-                        console.log(parser);
                         parser.getTracks();
-
                     } 
                 });
                 parser._tracks.forEach((track: Track) => {
                     let string = track.toString();
-                    console.log(track.toString());
                     tracklist.push(string);
                     setPlaylist(tracklist);
                 });
-
                 
             }
         };
         reader.readAsText(file);
     };
+    const getSpotifyURI = () => {
+        return new Promise<void>( async (resolve) => {
+            let cntr = 0;
+            let pos = 0;
+            playlist.forEach((track: any) => {
+                setTimeout(async () => {
+                await spotifyApi.searchTracks(decodeURIComponent(track)).then((data) => {
+                    if (data.body.tracks && data.body.tracks.items.length > 0) {
+                        spotifyTrackURIs.push(data.body.tracks.items[0].uri);
+                    } else {
+                        console.log('no tracks found');
+                        cntr++;
+                    }
+                    pos++;
+                }, (err) => {
+                    pos++;
+                    cntr++;
+                    console.log(err);
+                });
+                if (pos == playlist.length) {
+                    resolve();
+                }
+            }, 300 * (pos + 1));
+            });
+        });
+    };
     const submitPlaylist = async () => {
-        if (playlist.length > 0) {
-            await getSpotifyURI();
+        await getSpotifyURI();
+        if (spotifyTrackURIs.length > 0) {
             spotifyApi.createPlaylist(playlistName, { 'public': true, 'description': 'playlist made with: https://itunes-spotify.herokuapp.com/' })
             .then( async (data) => {
-                console.log(data.body);
-                let playlistId = data.body.id;
+                const playlistId = data.body.id;
 
-                const chunkSize = 99;
+                const chunkSize = 100; // max limit for tracks is 100
                 const chunks = spotifyTrackURIs.reverse().reduce((resultArray, item, index) => {
                     const chunkIndex = Math.floor(index/chunkSize);
                     if(!resultArray[chunkIndex]) {
@@ -113,15 +131,17 @@ export default function App() {
                 }, []);
 
                 for (const chunk of chunks) {
-                    await spotifyApi.addTracksToPlaylist(playlistId, chunk)
-                    .then( (data) => {
-                        console.log(data.body);
-                    }, (err) => {
-                        console.log(err);
-                    });
+                    setTimeout(async () => {
+                        await spotifyApi.addTracksToPlaylist(playlistId, chunk)
+                        .then( (data) => {
+                            console.log(data.body);
+                        }, (err) => {
+                            console.log(err);
+                        });
+                    }, 300 * (chunks.indexOf(chunk) + 1));
                 };
                 if(successDialog.current !== null){
-                    successDialog.current.innerHTML += `Your playlist, ${playlistName} was created <a href=${data.body.href}>here!</a>`;
+                    successDialog.current.innerHTML += `Your playlist, ${playlistName} was created <a href=${data.body.uri}>here!</a>`;
                     successDialog.current.showModal();
                     successDialog.current.querySelector('button')?.addEventListener('click', () => {
                         successDialog.current?.close();
@@ -135,25 +155,6 @@ export default function App() {
         else {
             console.log('No tracks to add');
         }
-    };
-
-    const getSpotifyURI = () => {
-        return new Promise((resolve) => {
-        playlist.forEach((track: string) => {
-            spotifyApi.searchTracks(decodeURIComponent(track)).then((data) => {
-                console.log(data.body);
-                if(data?.body?.tracks?.items[0].uri){
-                spotifyTrackURIs.push(data?.body?.tracks?.items[0].uri);
-                }else{
-                    console.log('no uri for ' + decodeURIComponent(track));
-                }
-            }, (err) => {
-                console.log(err);
-            });
-        });
-        resolve(spotifyTrackURIs);
-        })
-
     };
 
 
@@ -240,9 +241,11 @@ export default function App() {
             <input name='playlist' type="text" value={playlistName} onChange={e => setPlaylistName(e.target.value)}></input>
             <button onClick={submitPlaylist}>Submit</button>
             <div>
-                {playlist.map((track: any) => (
-                    <div>{decodeURIComponent(track)}</div>
+                <ol>
+                {playlist.reverse().map((track: any) => (
+                    <li>{decodeURIComponent(track)}</li>
                 ))}
+                </ol>
             </div>
             <dialog ref={successDialog}><button>Close</button></dialog>
             <p>If you'd like to contribute to this project check <a href='https://github.com/joonipea/itunes-to-spotify-playlist'>https://github.com/joonipea/itunes-to-spotify-playlist</a></p>
