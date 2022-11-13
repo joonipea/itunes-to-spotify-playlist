@@ -11,7 +11,7 @@ class Track {
 		// testing showed that just providing the track and artist gives the
 		// best results when searching, if the provided album name isn't precise
 		// then the search doesn't find anything
-		return encodeURIComponent('track:' + this._title + ' artist:' + this._artist.replace(/ &/g, ','));
+		return encodeURIComponent('track:' + this._title.replace(/\ \(.*/g, '') + ' artist:' + this._artist.replace(/\ \& .*/g, ''));
 	}
 }
 
