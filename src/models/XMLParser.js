@@ -9,6 +9,7 @@ class XMLParser {
 		this._parsedXml = null;
 		this._playlists = [];
 		this._tracks = [];
+		this._order = [];
 	}
 	// Methods
 	parse(file, callback) {
@@ -76,6 +77,11 @@ class XMLParser {
 
 			this._tracks.push(newTrack);
 		}
+	}
+	getTrackOrder(){
+		this._parsedXml.plist.dict[0].array[0].dict[0].array[0].dict.forEach(element => {
+			this._order.push(parseInt(element.integer[0]));
+		});
 	}
 	getTrackById(id) {
 

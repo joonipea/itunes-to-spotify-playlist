@@ -75,6 +75,16 @@ export default function App() {
                     }
                     else{
                         parser.getTracks();
+                        parser.getPlaylists();
+                        parser.getTrackOrder();
+                        console.log(parser._order);
+                        (function(){
+                            return new Promise<void>((resolve) => { 
+                                parser._tracks.sort((a, b) => parser._order.indexOf(parseInt(a._id)) - parser._order.indexOf(parseInt(b._id)));
+                                resolve();
+                            });
+                        })();
+                        console.log(parser);
                     } 
                 });
                 parser._tracks.forEach((track: Track) => {
@@ -98,6 +108,7 @@ export default function App() {
                         spotifyTrackURIs.push(data.body.tracks.items[0].uri);
                     } else {
                         console.log('no tracks found');
+                        console.log(decodeURIComponent(track));
                         cntr++;
                     }
                     pos++;
@@ -121,7 +132,7 @@ export default function App() {
                 const playlistId = data.body.id;
 
                 const chunkSize = 100; // max limit for tracks is 100
-                const chunks = spotifyTrackURIs.reverse().reduce((resultArray, item, index) => {
+                const chunks = spotifyTrackURIs.reduce((resultArray, item, index) => {
                     const chunkIndex = Math.floor(index/chunkSize);
                     if(!resultArray[chunkIndex]) {
                         resultArray[chunkIndex] = [];
@@ -242,7 +253,7 @@ export default function App() {
             <button onClick={submitPlaylist}>Submit</button>
             <div>
                 <ol>
-                {playlist.reverse().map((track: any) => (
+                {playlist.map((track: any) => (
                     <li>{decodeURIComponent(track)}</li>
                 ))}
                 </ol>
