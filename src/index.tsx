@@ -25,6 +25,7 @@ export default function App() {
     const [user, setUser]: any = useState(null);
     const [playlist, setPlaylist]: any = useState([]);
     const [playlistName, setPlaylistName]: any = useState('');
+    const [playlistUrl, setPlaylistUrl]: any = useState('');
     let tracklist: any = [];
     let spotifyTrackURIs: any = [];
     const successDialog = useRef<HTMLDialogElement>(null);
@@ -60,8 +61,7 @@ export default function App() {
                     console.log('Something went wrong!', err);
                 });
         }
-    }, [token]);
-    
+    }, [token]);  
     const handleFile = (e: any) => {
         const file = e.target.files[0];
         const reader = new FileReader();
@@ -97,6 +97,37 @@ export default function App() {
         };
         reader.readAsText(file);
     };
+    const getFromURL = (url: string) => {
+        return new Promise<void>(async (resolve) => {
+            fetch(process.env.REACT_APP_PROXY_URL + url).then((response) => {
+                return response.text()
+            }).then((html) => {
+                var parser = new DOMParser();
+                var doc = parser.parseFromString(html, 'text/html');
+                var sCount = 0;
+                var aCount = 0;
+                var songsArray: Array<string>  = [];
+                var artistsArray: Array<string> = [];
+                var songList = doc.querySelectorAll<HTMLElement>('.songs-list-row__song-name')
+                songList.forEach((el) => {
+                    songsArray.push(el.innerText);
+                    sCount++;
+                })
+                var artistList = doc.querySelectorAll<HTMLElement>('.songs-list__col--secondary')
+                artistList.forEach((el) => {
+                    artistsArray.push(el.innerText.trim());
+                    aCount++;
+                })
+                if (sCount == songList.length && aCount == artistList.length) {
+                    for (let i = 0; i < songsArray.length; i++) {
+                        tracklist.push(encodeURIComponent('track:' + songsArray[i].replace(/\ \(.*/g, '') + ' artist:' + artistsArray[i + 1].replace(/\ \& .*/g, '')));
+                        setPlaylist(tracklist);
+                    }
+                    resolve(console.log(playlist));
+                }
+            });
+        });
+    };
     const getSpotifyURI = () => {
         return new Promise<void>( async (resolve) => {
             let cntr = 0;
@@ -105,21 +136,21 @@ export default function App() {
                 await (function() {
                     return new Promise<void>((resolve, reject) => {
                         spotifyApi.searchTracks(decodeURIComponent(track)).then((data) => {
-                    if (data.body.tracks && data.body.tracks.items.length > 0) {
-                        spotifyTrackURIs.push(data.body.tracks.items[0].uri);
-                    } else {
-                        console.log('no tracks found');
-                        console.log(decodeURIComponent(track));
-                        cntr++;
-                    }
-                    pos++;
+                            if (data.body.tracks && data.body.tracks.items.length > 0) {
+                                spotifyTrackURIs.push(data.body.tracks.items[0].uri);
+                            } else {
+                                console.log('no tracks found');
+                                console.log(decodeURIComponent(track));
+                                cntr++;
+                            }
+                            pos++;
                             resolve();
-                }, (err) => {
-                    pos++;
-                    cntr++;
-                    console.log(err);
+                        }, (err) => {
+                            pos++;
+                            cntr++;
+                            console.log(err);
                             reject();
-                });
+                        });
                     });
                 })();
                 if (pos == playlist.length) {
@@ -149,22 +180,22 @@ export default function App() {
                     await (function(){
                         return new Promise<void>((resolve, reject) => {
                                 spotifyApi.addTracksToPlaylist(playlistId, chunk)
-                        .then( (data) => {
+                                .then( (data) => {
                                     resolve(console.log(data.body));
-                        }, (err) => {
+                                }, (err) => {
                                     reject(console.log(err));
-                        });
+                                });
                         });
                     })();
                     if (chunks.indexOf(chunk) == chunks.length - 1) {
-                if(successDialog.current !== null){
-                    successDialog.current.innerHTML += `Your playlist, ${playlistName} was created <a href=${data.body.uri}>here!</a>`;
-                    successDialog.current.showModal();
-                    successDialog.current.querySelector('button')?.addEventListener('click', () => {
-                        successDialog.current?.close();
-                    });
-
-                }
+                        if(successDialog.current !== null){
+                            successDialog.current.innerHTML += `Your playlist, ${playlistName} was created <a href=${data.body.uri}>here!</a>`;
+                            successDialog.current.showModal();
+                            successDialog.current.querySelector('button')?.addEventListener('click', () => {
+                                successDialog.current?.close();
+                            });
+        
+                        }
                     }
                 };
 
@@ -260,6 +291,8 @@ export default function App() {
             <label htmlFor='playlistName'>Playlist Name</label>
             <input name='playlist' type="text" value={playlistName} onChange={e => setPlaylistName(e.target.value)}></input>
             <button onClick={submitPlaylist}>Submit</button>
+            <input type={'text'} value={playlistUrl} onChange={e => setPlaylistUrl(e.target.value)}></input>
+            <button onClick={() => getFromURL(playlistUrl)}>Get from URL</button>
             <div>
                 <ol>
                 {playlist.map((track: any) => (
