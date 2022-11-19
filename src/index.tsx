@@ -101,9 +101,10 @@ export default function App() {
         return new Promise<void>( async (resolve) => {
             let cntr = 0;
             let pos = 0;
-            playlist.forEach((track: any) => {
-                setTimeout(async () => {
-                await spotifyApi.searchTracks(decodeURIComponent(track)).then((data) => {
+            for await (let track of playlist){
+                await (function() {
+                    return new Promise<void>((resolve, reject) => {
+                        spotifyApi.searchTracks(decodeURIComponent(track)).then((data) => {
                     if (data.body.tracks && data.body.tracks.items.length > 0) {
                         spotifyTrackURIs.push(data.body.tracks.items[0].uri);
                     } else {
@@ -112,16 +113,19 @@ export default function App() {
                         cntr++;
                     }
                     pos++;
+                            resolve();
                 }, (err) => {
                     pos++;
                     cntr++;
                     console.log(err);
+                            reject();
                 });
+                    });
+                })();
                 if (pos == playlist.length) {
                     resolve();
                 }
-            }, 300 * (pos + 1));
-            });
+            };
         });
     };
     const submitPlaylist = async () => {
@@ -141,16 +145,18 @@ export default function App() {
                     return resultArray;
                 }, []);
 
-                for (const chunk of chunks) {
-                    setTimeout(async () => {
-                        await spotifyApi.addTracksToPlaylist(playlistId, chunk)
+                for await (const chunk of chunks) {
+                    await (function(){
+                        return new Promise<void>((resolve, reject) => {
+                                spotifyApi.addTracksToPlaylist(playlistId, chunk)
                         .then( (data) => {
-                            console.log(data.body);
+                                    resolve(console.log(data.body));
                         }, (err) => {
-                            console.log(err);
+                                    reject(console.log(err));
                         });
-                    }, 300 * (chunks.indexOf(chunk) + 1));
-                };
+                        });
+                    })();
+                    if (chunks.indexOf(chunk) == chunks.length - 1) {
                 if(successDialog.current !== null){
                     successDialog.current.innerHTML += `Your playlist, ${playlistName} was created <a href=${data.body.uri}>here!</a>`;
                     successDialog.current.showModal();
@@ -159,6 +165,9 @@ export default function App() {
                     });
 
                 }
+                    }
+                };
+
                 setPlaylistName('');
                 setPlaylist([]);
             });
