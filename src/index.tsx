@@ -210,23 +210,26 @@ export default function App() {
 
 
     return token === null ? (
-        <div style={{margin:'auto',width:'fit-content'}}>
+        <div style={{margin:'auto',width:'fit-content',marginTop:'60px'}}>
             <style>
                 {`
                 .login-btn {
                     background-color: #1DB954;
                     padding: 10px;
-                    border-radius: 5px;
+                    border-radius: 20px;
                     color: white;
                     text-decoration: none;
+                    display: flex;
+                    vertical-align: middle;
+                    width: fit-content;
                 }
                 .login-btn:hover {
                     background-color: #1ED760;
                 }
                 p, a, li {
-                    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                    font-family: 'Montseratt, Helvetica Neue', Helvetica, Arial, sans-serif;
                     font-size: 16px;
-                    color: #222;
+                    color: #fff;
                 }
                 li {
                     margin-bottom: 10px;
@@ -234,24 +237,20 @@ export default function App() {
                 h1, h2, h3, h4, h5, h6 {
                     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
                     font-weight: 400;
-                    color: #222;
+                    color: #fff;
+                }
+                :root {
+                    background: conic-gradient(from 180deg at 50% 50%, #151524 0deg, #17171C 73.13deg, #151524 360deg);
+                    min-height: 100vh;
                 }
                 `}
             </style>
-            <h1>iTunes/Apple Music Playlist to Spotify Playlist</h1>
-            <h3>Steps:</h3>
-            <ol>
-                <li>Open iTunes</li>
-                <li>Select a playlist in the sidebar</li>
-                <li>Choose File / Library / Export Playlist, then click the Format pop-up menu and choose XML. <ul><li><a href="https://www.wikihow.com/Export-an-iTunes-Playlist">If you're running into problems check out this guide</a></li></ul></li>
-                <li>Login to your spotify with the link below</li>
-                <li>Upload the .xml file</li>
-                <li>Name your playlist</li>
-                <li>Double check your playlist (please note some songs may be missing this isn't perfect)</li>
-                <li>Click the button to create a playlist on Spotify</li>
-            </ol>
-            <a href={authorizeURL} className="login-btn">Login with Spotify</a>
-            <p>If you'd like to contribute to this project reachout to june@joonipea.com or check https://github.com/joonipea</p>
+            <h1>Apple Music Playlist to Spotify Playlist</h1>
+            <p>
+            A free Apple Music/iTunes playlist to Spotify playlist convertor. Keep your favorite tunes cross platform or send a playlist to a friend.
+            </p>
+            <a href={authorizeURL} className="login-btn"><img src="./Spotify_Icon_RGB_White.png" height="16px" width="16px" style={{marginRight:'8px'}}/>Login with Spotify</a>
+            <p>If you'd like to contribute to this project reachout to june@joonipea.com or check out the <a href='https://github.com/joonipea/itunes-to-spotify-playlist'>repo on github</a></p>
         </div>
     ) : (
         <div style={{margin:'auto',width:'fit-content'}}>
@@ -260,17 +259,20 @@ export default function App() {
                 .login-btn {
                     background-color: #1DB954;
                     padding: 10px;
-                    border-radius: 5px;
+                    border-radius: 20px;
                     color: white;
                     text-decoration: none;
+                    display: flex;
+                    vertical-align: middle;
+                    width: fit-content;
                 }
                 .login-btn:hover {
                     background-color: #1ED760;
                 }
                 p, a, li {
-                    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                    font-family: 'Montseratt, Helvetica Neue', Helvetica, Arial, sans-serif;
                     font-size: 16px;
-                    color: #222;
+                    color: #fff;
                 }
                 li {
                     margin-bottom: 10px;
@@ -278,7 +280,11 @@ export default function App() {
                 h1, h2, h3, h4, h5, h6 {
                     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
                     font-weight: 400;
-                    color: #222;
+                    color: #fff;
+                }
+                :root {
+                    background: conic-gradient(from 180deg at 50% 50%, #151524 0deg, #17171C 73.13deg, #151524 360deg);
+                    min-height: 100vh;
                 }
                 `}
             </style>
