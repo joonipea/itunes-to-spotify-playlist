@@ -163,13 +163,35 @@ export default function App() {
     };
     const submitPlaylist = async () => {
         await getSpotifyURI();
+        console.log(spotifyTrackURIs);
         if (spotifyTrackURIs.length > 0) {
+            for await (let track of spotifyTrackURIs.reverse()) {
+                await (function() {
+                    return new Promise<void>((resolve, reject) => {
+                        fetch(`https://api.spotify.com/v1/me/tracks?ids=${track.toString().replaceAll("spotify:track:","").replaceAll(",","%2C")}`,{
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Authorization": "Bearer " + token
+                            },
+                        }).then((data) => {
+                            setTimeout(() => {
+                                resolve(console.log(data));
+                            }, 500);
+                        }, (err) => {
+                            setTimeout(() => {
+                                reject(console.log(err));
+                            }, 500);
+                        });
+                    });
+                })();
+            }
             spotifyApi.createPlaylist(playlistName, { 'public': true, 'description': 'playlist made with: https://itunes-spotify.herokuapp.com/' })
             .then( async (data) => {
                 const playlistId = data.body.id;
 
-                const chunkSize = 100; // max limit for tracks is 100
-                const chunks = spotifyTrackURIs.reduce((resultArray, item, index) => {
+                const chunkSize = 50; // max limit for tracks is 100
+                const chunks = spotifyTrackURIs.reverse().reduce((resultArray, item, index) => {
                     const chunkIndex = Math.floor(index/chunkSize);
                     if(!resultArray[chunkIndex]) {
                         resultArray[chunkIndex] = [];
@@ -189,6 +211,7 @@ export default function App() {
                                 });
                         });
                     })();
+
                     if (chunks.indexOf(chunk) == chunks.length - 1) {
                         if(successDialog.current !== null){
                             successDialog.current.innerHTML += `Your playlist, ${playlistName} was created <a href=${data.body.uri}>here!</a>`;
@@ -257,7 +280,7 @@ export default function App() {
             A free Apple Music/iTunes playlist to Spotify playlist convertor. Keep your favorite tunes cross platform or send a playlist to a friend.
             </p>
             <a href={authorizeURL} className="login-btn"><img src="./Spotify_Icon_RGB_White.png" height="16px" width="16px" style={{marginRight:'8px'}}/>Login with Spotify</a>
-            <p>If you'd like to contribute to this project reachout to june@joonipea.com or check out the <a href='https://github.com/joonipea/itunes-to-spotify-playlist'>repo on github</a></p>
+            <p>If you'd like to contribute to this project check out the <a href='https://github.com/joonipea/itunes-to-spotify-playlist'>repo on github</a></p>
         </div>
     ) : (
         <div style={{margin:'auto',width:'fit-content'}}>
