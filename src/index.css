@@ -1,0 +1,108 @@
+.login-btn {
+    background-color: #1DB954;
+    padding: 10px;
+    border-radius: 20px;
+    color: white;
+    text-decoration: none;
+    display: flex;
+    vertical-align: middle;
+    width: fit-content;
+}
+.login-btn:hover {
+    background-color: #1ED760;
+}
+p, a, li, label, button, input:not([type="text"]) {
+    font-family: 'Montseratt, Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    color: #fff;
+}
+li {
+    margin-bottom: 10px;
+}
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montseratt, Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    color: #fff;
+}
+:root {
+    background: linear-gradient(0.15turn, #1c1c3a, #17171C, #151524);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+}
+
+.step-container{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: 100vh;
+    width: fit-content;
+    text-align: left;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.step-container:not(.no-center){
+    justify-content: center;
+}
+
+
+
+input[type=text]{
+    width: calc(100% - 50px);
+    font-size: 16px;
+    margin-bottom: 16px;
+    font-family: 'Montseratt, Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+
+  button:not(.button__setting), input::file-selector-button{
+    background: #4361CD;
+    border-radius: 20px;
+    border: 0px;
+    color: white;
+    font-size: 16px;
+    padding: 8px;
+    margin-top: 16px;
+    cursor: pointer;
+  }
+
+
+  .button__container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: calc(100% - 40px);
+    gap: 8px;
+    padding-left: 20px;
+    padding-right: 20px;
+
+  }
+  .button__setting{
+    background: #D9D9D9;
+    border-radius: 20px;
+    border: 0px;
+    font-size: 16px;
+    padding: 8px;
+    margin-top: 16px;
+    cursor: pointer;
+    max-height: calc(100vh - 50px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+    width: 50%;
+    min-height: 400px;
+    transition: background 0.2s ease-in-out;
+  }
+  .button__setting:hover{
+    background: #ffffff;
+  }
+  .button__setting h3, .button__setting p{
+    color: #000 !important;
+  }
+
+  .big-text{
+    font-size: 96px;
+    color: black;
+  }
