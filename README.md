@@ -2,16 +2,24 @@
 
 A TypeScript project to convert iTunes playlists into spotify playlists using the [NodeJS Spotify Web API wrapper](https://github.com/thelinmichael/spotify-web-api-node) built on top of @Poc275's [converter](https://github.com/Poc275/iTunes-to-Spotify). This is a project to spite Apple for raising their monthly fee from 9.99/month to 10.99/month. It's currently hosted on [heroku](https://itunes-spotify.herokuapp.com/).
 
-## Limitations
-Currently Apple music doesn't allow you to export a Library in the play order
-Exporting a playlist can only be done on a desktop client
-If this project wants to migrate to the Apple API it'll need $99/year
+## Road Map
+Queue multiple playlists
+Add songs to library and bypass playlist creation
+Refactor the steps process for readability
 
 ## Where to find it
 
 https://itunes-spotify.herokuapp.com/
 
 ## How to use
+
+URL Method:
+
+1. Share your playlist
+2. Copy the link
+3. Follow the steps in the wizard
+
+XML Method:
 
 Open iTunes
 1. Select a playlist in the sidebar
