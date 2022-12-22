@@ -3,9 +3,9 @@
 A TypeScript project to convert iTunes playlists into spotify playlists using the [NodeJS Spotify Web API wrapper](https://github.com/thelinmichael/spotify-web-api-node) built on top of @Poc275's [converter](https://github.com/Poc275/iTunes-to-Spotify). This is a project to spite Apple for raising their monthly fee from 9.99/month to 10.99/month. It's currently hosted on [heroku](https://itunes-spotify.herokuapp.com/).
 
 ## Road Map
-Queue multiple playlists
-Add songs to library and bypass playlist creation
-Refactor the steps process for readability
+- Queue multiple playlists
+- Add songs to library and bypass playlist creation
+- Refactor the steps process for readability
 
 ## Where to find it
 
